@@ -25,6 +25,14 @@ async function findBookById(bookId) {
   return book;
 }
 
+async function deleteBookById(bookId) {
+  if (!mongoose.Types.ObjectId.isValid(bookId)) {
+    throw new Error('no book exists');
+  }
+
+  await BookModel.findByIdAndDelete(bookId);
+}
+
 async function addCommentToBook(bookId, comment) {
   if (!comment) {
     throw new Error('missing required field comment');
@@ -43,6 +51,7 @@ async function dropBooksCollection() {
 
 exports.createBook = createBook;
 exports.findBookById = findBookById;
+exports.deleteBookById = deleteBookById;
 exports.addCommentToBook = addCommentToBook;
 exports.dropBooksCollection = dropBooksCollection;
 

@@ -11,7 +11,8 @@ const {
   createBook,
   dropBooksCollection,
   addCommentToBook,
-  findBookById
+  findBookById,
+  deleteBookById
 } = require('../services/libraryService.js');
 
 module.exports = function(app) {
@@ -52,7 +53,6 @@ module.exports = function(app) {
         const book = await findBookById(bookid);
         return res.json(book);
       } catch (error) {
-        console.error(error);
         return res.send(error.message);
       }
     })
@@ -65,14 +65,20 @@ module.exports = function(app) {
         const book = await addCommentToBook(bookid, comment);
         return res.json(book);
       } catch (error) {
-        console.error(error);
         return res.send(error.message);
       }
     })
 
-    .delete(function(req, res) {
+    .delete(async function(req, res) {
       let bookid = req.params.id;
-      //if successful response will be 'delete successful'
+
+      try {
+        await deleteBookById(bookid);
+        return res.send('delete successful');
+      } catch (error) {
+        console.error(error);
+        return res.send(error.message);
+      }
     });
 
 };
