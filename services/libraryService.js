@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const { BookModel } = require('../models/librarySchemas');
 
 async function createBook(title) {
@@ -14,4 +13,9 @@ async function createBook(title) {
   return savedBook;
 }
 
+async function dropBooksCollection() {
+  await BookModel.collection.drop();
+}
+
 exports.createBook = createBook;
+exports.dropBooksCollection = dropBooksCollection;

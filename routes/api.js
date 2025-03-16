@@ -7,7 +7,10 @@
 */
 
 'use strict';
-const { createBook } = require('../services/libraryService.js')
+const {
+  createBook,
+  dropBooksCollection
+} = require('../services/libraryService.js');
 
 module.exports = function(app) {
 
@@ -19,19 +22,23 @@ module.exports = function(app) {
 
     .post(async function(req, res) {
       const title = req.body.title;
-      console.log(title);
       //response will contain new book object including atleast _id and title
       try {
         const book = await createBook(title);
         return res.json(book);
       } catch (error) {
-        console.error(error);
         return res.send(error.message);
       }
     })
 
-    .delete(function(req, res) {
-      //if successful response will be 'complete delete successful'
+    .delete(async function(_req, res) {
+      try {
+        await dropBooksCollection();
+        return res.send('complete delete successful');
+      } catch (error) {
+        console.error(error);
+        return res.send(error.message);
+      }
     });
 
 
