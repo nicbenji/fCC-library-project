@@ -43,7 +43,10 @@ async function deleteBookById(bookId) {
     throw new Error('no book exists');
   }
 
-  await BookModel.findByIdAndDelete(bookId);
+  const result = await BookModel.findByIdAndDelete(bookId);
+  if (!result) {
+    throw new Error('no book exists');
+  }
 }
 
 async function addCommentToBook(bookId, comment) {
