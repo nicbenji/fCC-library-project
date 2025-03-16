@@ -77,7 +77,6 @@ module.exports = function(app) {
 
     .delete(async function(req, res) {
       let bookid = req.params.id;
-      console.log(bookid);
 
       try {
         await deleteBookById(bookid);
