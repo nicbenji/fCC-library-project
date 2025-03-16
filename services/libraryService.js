@@ -13,6 +13,19 @@ async function createBook(title) {
   return savedBook;
 }
 
+async function getAllBooksWithCommentCount() {
+  const books = await BookModel.aggregate([
+    {
+      $project: {
+        title: 1,
+        _id: 1,
+        commentcount: { $size: '$comments' }
+      }
+    }
+  ]);
+  return books;
+}
+
 async function findBookById(bookId) {
   if (!mongoose.Types.ObjectId.isValid(bookId)) {
     throw new Error('no book exists');
@@ -40,7 +53,6 @@ async function addCommentToBook(bookId, comment) {
 
   const book = await findBookById(bookId);
   book.comments.push(comment);
-  console.log(book);
   const newBook = await book.save();
   return newBook;
 }
@@ -50,6 +62,7 @@ async function dropBooksCollection() {
 }
 
 exports.createBook = createBook;
+exports.getAllBooksWithCommentCount = getAllBooksWithCommentCount;
 exports.findBookById = findBookById;
 exports.deleteBookById = deleteBookById;
 exports.addCommentToBook = addCommentToBook;

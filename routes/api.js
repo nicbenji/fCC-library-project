@@ -12,15 +12,22 @@ const {
   dropBooksCollection,
   addCommentToBook,
   findBookById,
-  deleteBookById
+  deleteBookById,
+  getAllBooksWithCommentCount
 } = require('../services/libraryService.js');
 
 module.exports = function(app) {
 
   app.route('/api/books')
-    .get(function(req, res) {
-      //response will be array of book objects
+    .get(async function(_req, res) {
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
+      try {
+        const books = await getAllBooksWithCommentCount();
+        return res.json(books);
+      } catch (error) {
+        console.error(error);
+        return res.send(error.message);
+      }
     })
 
     .post(async function(req, res) {
@@ -76,7 +83,6 @@ module.exports = function(app) {
         await deleteBookById(bookid);
         return res.send('delete successful');
       } catch (error) {
-        console.error(error);
         return res.send(error.message);
       }
     });
