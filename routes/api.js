@@ -19,6 +19,7 @@ module.exports = function(app) {
 
     .post(async function(req, res) {
       const title = req.body.title;
+      console.log(title);
       //response will contain new book object including atleast _id and title
       try {
         const book = await createBook(title);

@@ -43,7 +43,7 @@ suite('Functional Tests', function() {
       test('Test POST /api/books with title', function(done) {
         chai.request(server)
           .post('/api/books')
-          .field({ title: 'Test Book' })
+          .send({ title: 'Test Book' })
           .end((_err, res) => {
             assert.equal(res.status, 200);
             assert.equal(res.type, 'application/json');
@@ -57,10 +57,11 @@ suite('Functional Tests', function() {
       test('Test POST /api/books with no title given', function(done) {
         chai.request(server)
           .post('/api/books')
-          .field({ title: '' })
+          .send({ title: '' })
           .end((_err, res) => {
             assert.equal(res.status, 200);
-            assert.equal(res.body, 'missing required field title');
+            assert.equal(res.type, 'text/html');
+            assert.equal(res.text, 'missing required field title');
             done();
           });
       });
