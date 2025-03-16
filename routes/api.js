@@ -9,7 +9,9 @@
 'use strict';
 const {
   createBook,
-  dropBooksCollection
+  dropBooksCollection,
+  addCommentToBook,
+  findBookById
 } = require('../services/libraryService.js');
 
 module.exports = function(app) {
@@ -36,7 +38,6 @@ module.exports = function(app) {
         await dropBooksCollection();
         return res.send('complete delete successful');
       } catch (error) {
-        console.error(error);
         return res.send(error.message);
       }
     });
@@ -44,15 +45,29 @@ module.exports = function(app) {
 
 
   app.route('/api/books/:id')
-    .get(function(req, res) {
+    .get(async function(req, res) {
       let bookid = req.params.id;
       //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+      try {
+        const book = await findBookById(bookid);
+        return res.json(book);
+      } catch (error) {
+        console.error(error);
+        return res.send(error.message);
+      }
     })
 
-    .post(function(req, res) {
+    .post(async function(req, res) {
       let bookid = req.params.id;
       let comment = req.body.comment;
       //json res format same as .get
+      try {
+        const book = await addCommentToBook(bookid, comment);
+        return res.json(book);
+      } catch (error) {
+        console.error(error);
+        return res.send(error.message);
+      }
     })
 
     .delete(function(req, res) {
